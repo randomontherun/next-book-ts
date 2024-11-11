@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import CustomButton from "@/components/CustomButton";
+import * as process from "node:process";
 
 export function SearchBar({ setBooks }) {
     const [query, setQuery] = useState("");
@@ -12,7 +13,7 @@ export function SearchBar({ setBooks }) {
     const handleSearch = async () => {
         if (!query) return;
 
-        const API_KEY = 'AIzaSyA5ufxXw-OrLb6vDTzjFzUEVCXcMQwNiwo';
+        const API_KEY = process.env.GOOGLE_API_KEY;
         const API_URL = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${API_KEY}`;
         try {
             const response = await fetch(API_URL);

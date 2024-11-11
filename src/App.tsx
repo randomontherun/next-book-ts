@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { BookCarousel } from "@/components/BookCarousel";
 import { SearchBar } from "@/components/SearchBar";
 import { BookDrawer } from "@/components/BookDrawer";
@@ -6,7 +6,15 @@ import './app.css';
 
 function App() {
     const [books, setBooks] = useState([]);
-    const [selectedBooks, setSelectedBooks] = useState([]);
+
+    const [selectedBooks, setSelectedBooks] = useState(() => {
+        const savedBooks = localStorage.getItem('readingList');
+        return savedBooks ? JSON.parse(savedBooks) : [];
+    });
+
+    useEffect(() => {
+        localStorage.setItem('readingList', JSON.stringify(selectedBooks));
+    }, [selectedBooks]);
 
     const addToList = (book) => {
         if (!selectedBooks.some((selected) => selected.id === book.id)) {
