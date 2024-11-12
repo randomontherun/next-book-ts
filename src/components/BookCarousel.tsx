@@ -18,8 +18,8 @@ const customStyles = {
         zIndex: 1000,
     },
     overlay: {
-        zIndex: 999, // Ensure the overlay is beneath the modal but above the drawer overlay
-        backgroundColor: 'rgba(0, 0, 0, 0.5)' // Adjust the opacity for better readability
+        zIndex: 999,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
     }
 };
 
@@ -27,19 +27,12 @@ export function BookCarousel({ books, addToList, isReadingList, removeFromList }
     const [selectedBook, setSelectedBook] = React.useState(null);
     const [summary, setSummary] = React.useState("");
 
-    const handleActionButton = (book) => {
+    const handleActionButton = (event, book) => {
+        event.stopPropagation();
         if (isReadingList) {
-            return (
-                <CustomButton onClick={() => removeFromList(book.id)} className="mt-2">
-                    Remove
-                </CustomButton>
-            );
+            removeFromList(book.id);
         } else {
-            return (
-                <CustomButton onClick={() => addToList(book)} className="mt-2">
-                    Add
-                </CustomButton>
-            );
+            addToList(book);
         }
     };
 
@@ -49,7 +42,8 @@ export function BookCarousel({ books, addToList, isReadingList, removeFromList }
         setSummary(fetchedSummary);
     };
 
-    const closeModal = () => {
+    const closeModal = (event) => {
+        event.stopPropagation();
         setSelectedBook(null);
         setSummary("");
     };
@@ -86,7 +80,9 @@ export function BookCarousel({ books, addToList, isReadingList, removeFromList }
                                             <span className="text-sm text-gray-600">
                                                 {book.volumeInfo.authors?.join(", ") || "Unknown Author"}
                                             </span>
-                                            {handleActionButton(book)}
+                                            <CustomButton onClick={(event) => handleActionButton(event, book)}>
+                                                {isReadingList ? 'Remove' : 'Add'}
+                                            </CustomButton>
                                         </CardContent>
                                     </Card>
                                 </div>
@@ -103,7 +99,7 @@ export function BookCarousel({ books, addToList, isReadingList, removeFromList }
                 onRequestClose={closeModal}
                 contentLabel="Book Summary"
                 ariaHideApp={false}
-                style={customStyles} // Apply custom styles
+                style={customStyles}
             >
                 <h2>{selectedBook?.volumeInfo.title}</h2>
                 <div>
