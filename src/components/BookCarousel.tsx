@@ -8,13 +8,24 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import CustomButton from "@/components/CustomButton";
-import Modal from "react-modal"; // Import react-modal
-import { fetchBookSummary } from "../services/openAIService"; // Import fetchBookSummary
+import Modal from "react-modal";
+import { fetchBookSummary } from "../services/openAIService";
+import ReactMarkdown from 'react-markdown';
+
+// Custom styles for the Modal
+const customStyles = {
+    content: {
+        zIndex: 1000,
+    },
+    overlay: {
+        zIndex: 999, // Ensure the overlay is beneath the modal but above the drawer overlay
+        backgroundColor: 'rgba(0, 0, 0, 0.5)' // Adjust the opacity for better readability
+    }
+};
 
 export function BookCarousel({ books, addToList, isReadingList, removeFromList }) {
-    const [selectedBook, setSelectedBook] = React.useState(null); // Track selected book for modal
-    const [summary, setSummary] = React.useState(""); // Store fetched book summary
-    const [isLoading, setIsLoading] = React.useState(false); // Track loading state
+    const [selectedBook, setSelectedBook] = React.useState(null);
+    const [summary, setSummary] = React.useState("");
 
     const handleActionButton = (book) => {
         if (isReadingList) {
@@ -33,18 +44,14 @@ export function BookCarousel({ books, addToList, isReadingList, removeFromList }
     };
 
     const handleBookClick = async (book) => {
-        // Open modal with book summary
         setSelectedBook(book);
-        setIsLoading(true); // Set loading to true when starting to fetch
-        const fetchedSummary = await fetchBookSummary(book.volumeInfo.title, book.volumeInfo.authors?.join(", ")); // Fetch the summary when the book is clicked
+        const fetchedSummary = await fetchBookSummary(book.volumeInfo.title, book.volumeInfo.authors?.join(", "));
         setSummary(fetchedSummary);
-        setIsLoading(false); // Set loading to false once fetching is complete
     };
 
     const closeModal = () => {
         setSelectedBook(null);
-        setSummary(""); // Clear the summary when closing the modal
-        setIsLoading(false); // Reset loading state
+        setSummary("");
     };
 
     return (
@@ -68,7 +75,7 @@ export function BookCarousel({ books, addToList, isReadingList, removeFromList }
                                     <Card>
                                         <CardContent
                                             className="flex flex-col items-center justify-center p-6"
-                                            onClick={() => handleBookClick(book)} // Book click handler
+                                            onClick={() => handleBookClick(book)}
                                         >
                                             <img
                                                 className="mb-2 w-24 h-32 object-cover"
@@ -79,7 +86,6 @@ export function BookCarousel({ books, addToList, isReadingList, removeFromList }
                                             <span className="text-sm text-gray-600">
                                                 {book.volumeInfo.authors?.join(", ") || "Unknown Author"}
                                             </span>
-                                            {/* Conditionally render Add or Remove button */}
                                             {handleActionButton(book)}
                                         </CardContent>
                                     </Card>
@@ -92,16 +98,18 @@ export function BookCarousel({ books, addToList, isReadingList, removeFromList }
                 <CarouselNext />
             </Carousel>
 
-            {/* Book Summary Modal */}
             <Modal
-                isOpen={!!selectedBook} // Modal is open if there's a selected book
-                onRequestClose={closeModal} // Close modal on request
+                isOpen={!!selectedBook}
+                onRequestClose={closeModal}
                 contentLabel="Book Summary"
-                ariaHideApp={false} // Disable app element for accessibility
+                ariaHideApp={false}
+                style={customStyles} // Apply custom styles
             >
                 <h2>{selectedBook?.volumeInfo.title}</h2>
-                <p><strong>Summary:</strong> {isLoading ? "Loading summary..." : summary}</p>
-                <button onClick={closeModal}>Close</button>
+                <div>
+                    <ReactMarkdown>{summary || "Loading summary..."}</ReactMarkdown>
+                </div>
+                <CustomButton onClick={closeModal}>Close</CustomButton>
             </Modal>
         </div>
     );
