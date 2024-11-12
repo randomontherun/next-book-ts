@@ -1,16 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { BookCarousel } from "@/components/BookCarousel";
 import { SearchBar } from "@/components/SearchBar";
 import { BookDrawer } from "@/components/BookDrawer";
+import Modal from "react-modal"; // Import Modal for displaying summaries
+import { fetchBookSummary } from "@/services/openAIService"; // Import fetchBookSummary function
 import './app.css';
 
 function App() {
     const [books, setBooks] = useState([]);
-
     const [selectedBooks, setSelectedBooks] = useState(() => {
         const savedBooks = localStorage.getItem('readingList');
         return savedBooks ? JSON.parse(savedBooks) : [];
     });
+    const [selectedBook, setSelectedBook] = useState(null);
+    const [summary, setSummary] = useState("");
 
     useEffect(() => {
         localStorage.setItem('readingList', JSON.stringify(selectedBooks));
@@ -28,6 +31,17 @@ function App() {
         );
     };
 
+    const handleBookClick = async (book) => {
+        setSelectedBook(book);
+        const fetchedSummary = await fetchBookSummary(book.volumeInfo.title, book.volumeInfo.authors?.join(", "));
+        setSummary(fetchedSummary);
+    };
+
+    const closeModal = () => {
+        setSelectedBook(null);
+        setSummary("");
+    };
+
     return (
         <div>
             <h1>Next Book</h1>
@@ -40,8 +54,16 @@ function App() {
             />
             <BookDrawer
                 selectedBooks={selectedBooks}
-                removeFromList={removeFromList} // Pass remove function to the drawer
+                removeFromList={removeFromList}
+                onBookClick={handleBookClick} // Pass handleBookClick to open summary
             />
+
+            {/* Modal to display the book summary */}
+            <Modal isOpen={!!selectedBook} onRequestClose={closeModal}>
+                <h2>{selectedBook?.volumeInfo.title}</h2>
+                <p><strong>Summary:</strong> {summary || "Loading summary..."}</p>
+                <button onClick={closeModal}>Close</button>
+            </Modal>
         </div>
     );
 }

@@ -13,7 +13,7 @@ export function SearchBar({ setBooks }) {
     const handleSearch = async () => {
         if (!query) return;
 
-        const API_KEY = process.env.GOOGLE_API_KEY;
+        const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
         const API_URL = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${API_KEY}`;
         try {
             const response = await fetch(API_URL);

@@ -3,7 +3,7 @@ import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle } from 
 import { BookCarousel } from "@/components/BookCarousel";
 import { Button } from "@/components/ui/button"; // Assuming you're using the Button component
 
-export function BookDrawer({ selectedBooks, removeFromList }) {
+export function BookDrawer({ selectedBooks, removeFromList, fetchBookSummary }) {
     return (
         <Drawer>
             <DrawerTrigger asChild>
@@ -14,11 +14,12 @@ export function BookDrawer({ selectedBooks, removeFromList }) {
                 <DrawerHeader>
                     <DrawerTitle>Reading List</DrawerTitle>
                 </DrawerHeader>
-                {/* Pass the selected books to the BookCarousel and enable isReadingList */}
+                {/* Pass the selected books and fetchBookSummary to BookCarousel */}
                 <BookCarousel
                     books={selectedBooks}
                     isReadingList={true} // Indicate it's the reading list
                     removeFromList={removeFromList} // Remove functionality for the reading list
+                    fetchBookSummary={fetchBookSummary} // Pass the summary fetch function
                 />
             </DrawerContent>
         </Drawer>
