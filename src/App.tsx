@@ -43,8 +43,8 @@ function App() {
     };
 
     return (
-        <div>
-            <h1>Next Book</h1>
+        <div className="app-container">
+            <h1 className="app-title">Next Book</h1>
             <SearchBar setBooks={setBooks} />
             <BookCarousel
                 books={books}
