@@ -1,50 +1,22 @@
-# React + TypeScript + Vite
+# NextBook
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+NextBook is a web application for searching, browsing, and managing book lists. It integrates with the Google Books API for book data and uses the OpenAI API for generating summaries. The application is built with modern frontend tools and features a clean, responsive design.
 
-Currently, two official plugins are available:
+## Features
+- **Dynamic Components**: Leveraged [shadcn/ui](https://ui.shadcn.dev/) for building reusable components like buttons, carousels, modals, and drawers.
+- **API Integration**: 
+  - Google Books API for searching and retrieving book details.
+  - OpenAI API for generating book summaries on demand.
+- **Local State Management**: Uses React's `useState` and local memory to store and manage reading lists efficiently.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## How It Works
+1. **Search Books**: Enter a query in the search bar to fetch book results from the Google Books API.
+2. **Manage Lists**: Add books to your reading list and view them in a custom drawer component.
+3. **View Summaries**: Click on a book to fetch and display a summary powered by the OpenAI API.
 
-## Expanding the ESLint configuration
+## Technologies Used
+- **Frontend**: React, TypeScript, Vite
+- **UI Components**: shadcn/ui
+- **APIs**: Google Books, OpenAI
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Explore your next favorite book with NextBook!
